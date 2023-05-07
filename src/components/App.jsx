@@ -7,7 +7,22 @@ export class App extends Component {
 
   state = {
     contacts: []
+  }
+
+componentDidMount(){
+  const contacts = [];
+  for (let i = 0; i < localStorage.length; i++){  
+   const id = nanoid(); 
+   let key = localStorage.key(i);
+   const contact = {
+     name: key,
+     number: localStorage.getItem(key),
+     id: id
+   }
+   contacts.push(contact);
   };
+  this.setState({contacts});
+}
 
   createContact = evt => {
     evt.preventDefault();
@@ -29,6 +44,7 @@ export class App extends Component {
         number: temporalNumber,
         id: id,
       };
+      localStorage.setItem(temporalName, temporalNumber);
       this.setState(prev => ({
         contacts: prev.contacts.concat(contact)
       }));
@@ -42,6 +58,7 @@ export class App extends Component {
     const contacts = this.state.contacts.filter(el => {
       return el.id !== e.target.parentNode.id;
     });
+    localStorage.removeItem( e.target.parentNode.textContent.slice(0, -16));
     this.setState({ contacts });
   };
 
